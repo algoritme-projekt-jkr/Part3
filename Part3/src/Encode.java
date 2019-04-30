@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -55,12 +53,27 @@ public class Encode {
     }
 
     
-     public Element Hoffman(int[] C){
-         int n = C.length;
-         PQ Q = new PQHeap(n);
+     public Element createHoffmanTree(int[] c){
+         int n = c.length;
+         PQ q = new PQHeap(n);
+         for (int i = 0; i < c.length; i++) {
+             q.insert(new Element(i, c[i]));
+         }
          for (int i = 0; i < n-2; i++) { //måske <=   -----------------------------------kig her
+             Node z = new  Node(c[i]);
+             Node x = new Node((int)q.extractMin().getData());
+             z.setLeft(x);
+             
+             Node y = new Node((int)q.extractMin().getData());
+             z.setLeft(y);
+             
+             z.setFrequency(x.getFrequency() + y.getFrequency());
+             
+             q.insert(new Element(i, z));
              
          }
+         
+         return q.extractMin();
      }
     
 }
