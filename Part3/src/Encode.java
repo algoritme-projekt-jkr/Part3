@@ -65,7 +65,7 @@ public class Encode {
         int n = c.length;
         PQ q = new PQHeap(n);
         for (int i = 0; i < c.length; i++) {
-            q.insert(new Element(c[i], null));
+            q.insert(new Element(c[i], null)); //<--------------------------måske: her skal null være en new node med frekvensen c[i]?????????????????? node skal både have bogstavet og frequency
         }
         for (int i = 0; i < n - 2; i++) { //måske <=   -----------------------------------kig her
             Node z = new Node(c[i]); //the new node of the hoffman tree
