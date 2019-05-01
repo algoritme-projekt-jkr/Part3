@@ -1,12 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-
 /**
- *
- * @author Robin
+ * @author Robin Lausten Petersen   - ropet17
+ * @author Jeppe Enevold Jensen - jeppj17
+ * @author Kim Christensen - kichr17
  */
 public class Decode {
     

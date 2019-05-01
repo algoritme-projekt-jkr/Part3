@@ -14,6 +14,7 @@ public class Node {
         this.left = null;
         this.right = null;
         this.frequency = frequency;
+        this.character = -1;
     }
 
     public Node(int character, int frequency) {
@@ -53,6 +54,8 @@ public class Node {
         this.character = character;
     }
     
-    
+    public String toString(){
+        return "f: " + this.frequency + " c: " + this.character;
+    }
     
 }
