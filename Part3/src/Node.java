@@ -8,12 +8,17 @@ public class Node {
     private Node left;
     private Node right;
     private int frequency;
+    private int character;
 
-    //we set the key to the given value and the children to null
     public Node(int frequency) {
         this.left = null;
         this.right = null;
         this.frequency = frequency;
+    }
+
+    public Node(int character, int frequency) {
+        this(frequency);
+        this.character = character;
     }
 
     public Node getLeft() {
@@ -39,5 +44,15 @@ public class Node {
     public void setFrequency(int frequency) {
         this.frequency = frequency;
     }
+
+    public int getCharacter() {
+        return character;
+    }
+
+    public void setCharacter(int character) {
+        this.character = character;
+    }
+    
+    
     
 }

@@ -57,29 +57,24 @@ public class Encode {
     }
 
     public Element createHoffmanTree(int[] c) {
-        int tal= 0;
-        for (int i = 0; i < c.length; i++) {
-            tal += c[i];
-        }
-        System.out.println("tal: " + tal);
         int n = c.length;
         PQ q = new PQHeap(n);
         for (int i = 0; i < c.length; i++) {
-            q.insert(new Element(c[i], null)); //<--------------------------måske: her skal null være en new node med frekvensen c[i]?????????????????? node skal både have bogstavet og frequency
+            q.insert(new Element(c[i], new Node(i, c[i]))); 
         }
-        for (int i = 0; i < n - 2; i++) { //måske <=   -----------------------------------kig her
+        for (int i = 0; i <= n - 2; i++) {
             Node z = new Node(c[i]); //the new node of the hoffman tree
-            Node x = new Node(q.extractMin().getKey()); //we create a node x by extractMin.getData(), from q, to get the frequency
+            Node x = (Node)q.extractMin().getData(); //we create a node x by extractMin.getData(), from q, to get the frequency
             z.setLeft(x); //we set the left node of z to be x
 
             //here we do the same thing with y as we did with x
-            Node y = new Node(q.extractMin().getKey());
+            Node y = (Node)q.extractMin().getData();
             z.setLeft(y);
 
             //we set the frequency of z to be the sum of x and y'z frequency
             z.setFrequency(x.getFrequency() + y.getFrequency());
 
-            q.insert(new Element(i, z)); // we insert z back into the q
+            q.insert(new Element(z.getFrequency(), z)); // we insert z back into the q
 
         }
 
