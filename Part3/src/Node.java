@@ -55,7 +55,7 @@ public class Node {
     }
     
     public String toString(){
-        return "f: " + this.frequency + " c: " + this.character;
+        return "frequency: " + this.frequency + " character: " + this.character;
     }
     
 }
