@@ -65,7 +65,7 @@ public class Encode {
 
             //here we do the same thing with y as we did with x
             Node y = (Node) q.extractMin().getData();
-            z.setLeft(y);
+            z.setRight(y);
 
             //we set the frequency of z to be the sum of x and y'z frequency
             z.setFrequency(x.getFrequency() + y.getFrequency());
@@ -77,31 +77,27 @@ public class Encode {
         return q.extractMin();
     }
 
-    public int[] huffmanTable(Node root) {
-        int huffmanCodes[] = new int[256];
-        for (int i = 0; i < huffmanCodes.length; i++) {
-            huffmanCodes[i] = 1;
-        }
+    public String[] huffmanTable(Node root) {
+        String huffmanCodes[] = new String[256];
         StringBuilder sb = new StringBuilder();
         return huffmanWalk(root, huffmanCodes, sb);
     }
 
-    private int[] huffmanWalk(Node node, int[] a, StringBuilder sb) {
+    private String[] huffmanWalk(Node node, String[] a, StringBuilder sb) {
         if (node != null) {
             huffmanWalk(node.getLeft(), a, sb.append("0"));
             
             //denne if statement er måske forkert-------------------------------<<<<<<KIG HER
             if (node.getCharacter() != -1) {
-                a[node.getCharacter()] = Integer.parseInt(sb.toString());
+                a[node.getCharacter()] = sb.toString();
                 System.out.println("node: " + node.toString() +" sb: " + sb.toString());
-                sb.delete(sb.length() - 1, sb.length());
+//                sb.deleteCharAt(sb.length()-1);
             }
-
+            //sb.deleteCharAt(sb.length()-1);
+            
             huffmanWalk(node.getRight(), a, sb.append("1"));
-//            if (node.getCharacter() != -1) {
-//                sb.delete(sb.length() - 1, sb.length());
-//            }
         }
+        sb.deleteCharAt(sb.length()-1);
         return a;
     }
 
