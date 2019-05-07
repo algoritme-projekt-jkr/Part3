@@ -68,7 +68,7 @@ public class Encode {
                 for (int j = 0; j < huffmanPathTable[i].length(); j++) {
                     char c = huffmanPathTable[i].charAt(j);
                     int o = Integer.parseInt(String.valueOf(c));
-                    System.out.println("o = " + o + " charAt = " + huffmanPathTable[i].charAt(j) + " c = " + c);
+//                    System.out.println("o = " + o + " charAt = " + huffmanPathTable[i].charAt(j) + " c = " + c);
                     bitOutputStream.writeBit(o);
                 }
                   
