@@ -5,13 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 /**
- * @author Robin Lausten Petersen   - ropet17
+ * @author Robin Lausten Petersen - ropet17
  * @author Jeppe Enevold Jensen - jeppj17
  * @author Kim Christensen - kichr17
  */
 public class Decode {
+
     public static void main(String[] args) {
         String nameOfCompressedFile = args[0];
         String nameOfUncompressedFile = args[1];
@@ -20,18 +22,38 @@ public class Decode {
         FileOutputStream output = null;
         int entries[] = new int[256];
         int combinedFrequencies = 0;
-        
+
         try {
             input = new BitInputStream(new FileInputStream(new File(nameOfCompressedFile)));
+            output = new FileOutputStream(nameOfUncompressedFile);
             for (int i = 0; i < entries.length; i++) {
                 int temp = input.readInt();
                 entries[i] = temp;
                 combinedFrequencies += temp;
             }
+            System.out.println(Arrays.toString(entries));
             Element theHuffmanTree = decode.createHoffmanTree(entries);
-            
-            
-            
+            Node theHuffmanTreeNode = (Node) theHuffmanTree.getData();
+            Node tempNode = theHuffmanTreeNode;
+            for (int i = 0; i < combinedFrequencies; i++) { //Måske +1 <-------------------------KIG HER!!!!!
+                int j = input.readBit();
+                if (tempNode.getCharacter() != -1) {
+                    output.write(tempNode.getCharacter());
+                    tempNode = theHuffmanTreeNode; //<-------------------denne linje gør at filen ikke får samme størrelse igen
+                } else {
+                    switch (j) {
+                        case 0:
+                            tempNode = tempNode.getLeft();
+                            break;
+                        case 1:
+                            tempNode = tempNode.getRight();
+                            break;
+                        default:
+                            System.out.println("readBit error");
+                            break;
+                    }
+                }
+            }
 
         } catch (FileNotFoundException ex) {
             System.out.println("inputStream file exception");
@@ -42,18 +64,17 @@ public class Decode {
         } finally {
             try {
                 input.close();
+                output.close();
             } catch (IOException ex) {
                 System.out.println("can't close");
             }
 
         }
         input = null;
-        
-        
-        
-        
+        output = null;
+
     }
-    
+
     public Element createHoffmanTree(int[] c) {
         int n = c.length;
         PQ q = new PQHeap(n);
@@ -78,5 +99,5 @@ public class Decode {
 
         return q.extractMin();
     }
-    
+
 }
