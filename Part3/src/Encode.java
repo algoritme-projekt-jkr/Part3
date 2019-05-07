@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Robin Lausten Petersen - ropet17
@@ -19,6 +21,8 @@ public class Encode {
         String nameOfCompressedFile = args[1];
         FileInputStream input = null;
         FileOutputStream output = null;
+        String[] huffmanPathTable;
+        BitOutputStream bitOutputStream = null;
 
         int entries[] = new int[256];
         for (int i = 0; i < entries.length; i++) {
@@ -45,11 +49,46 @@ public class Encode {
             }
 
         }
+        input = null;
 
         System.out.println(Arrays.toString(entries));
         Element huffmanTree = encode.createHoffmanTree(entries);
-        System.out.println("Element test key" + huffmanTree.getKey() + "    data " + ((Node) huffmanTree.getData()).toString());
-        System.out.println("huffmanTable: " + Arrays.toString(encode.huffmanTable((Node)huffmanTree.getData())));
+        huffmanPathTable = encode.huffmanTable((Node)huffmanTree.getData());
+        
+        try {
+            bitOutputStream = new BitOutputStream(output = new FileOutputStream(nameOfCompressedFile));
+            for (int i = 0; i < entries.length; i++) {
+                bitOutputStream.writeInt(entries[i]);
+            }
+            
+            input = new FileInputStream(new File(nameOfOriginalFile));
+            int i;
+            while ((i = input.read()) != -1) {
+                
+                for (int j = 0; j < huffmanPathTable[i].length(); j++) {
+                    char c = huffmanPathTable[i].charAt(j);
+                    int o = Integer.parseInt(String.valueOf(c));
+                    System.out.println("o = " + o + " charAt = " + huffmanPathTable[i].charAt(j) + " c = " + c);
+                    bitOutputStream.writeBit(o);
+                }
+                  
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("inputStream file exception");
+            ex.printStackTrace();
+        } catch (IOException ex) {
+            System.out.println("IOException");
+            ex.printStackTrace();
+        } finally {
+            try {
+                input.close();
+                bitOutputStream.close();
+            } catch (IOException ex) {
+                System.out.println("can't close");
+            }
+
+        }
+        
     }
 
     public Element createHoffmanTree(int[] c) {
