@@ -96,8 +96,8 @@ public class Encode {
             //sb.deleteCharAt(sb.length()-1);
             
             huffmanWalk(node.getRight(), a, sb.append("1"));
+            sb.deleteCharAt(sb.length()-1);
         }
-        sb.deleteCharAt(sb.length()-1);
         return a;
     }
 
