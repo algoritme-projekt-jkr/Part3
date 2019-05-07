@@ -5,8 +5,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  * @author Robin Lausten Petersen - ropet17
@@ -129,7 +127,7 @@ public class Encode {
             
             if (node.getCharacter() != -1) {
                 a[node.getCharacter()] = sb.toString();
-                System.out.println("node: " + node.toString() +" sb: " + sb.toString());
+//                System.out.println("node: " + node.toString() +" sb: " + sb.toString());
             }
             
             huffmanWalk(node.getRight(), a, sb.append("1"));

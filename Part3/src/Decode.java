@@ -19,11 +19,14 @@ public class Decode {
         BitInputStream input = null;
         FileOutputStream output = null;
         int entries[] = new int[256];
+        int combinedFrequencies = 0;
         
         try {
             input = new BitInputStream(new FileInputStream(new File(nameOfCompressedFile)));
             for (int i = 0; i < entries.length; i++) {
-                entries[i] = input.readInt();
+                int temp = input.readInt();
+                entries[i] = temp;
+                combinedFrequencies += temp;
             }
             Element theHuffmanTree = decode.createHoffmanTree(entries);
             
