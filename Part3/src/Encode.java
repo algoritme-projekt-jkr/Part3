@@ -48,7 +48,7 @@ public class Encode {
 
         System.out.println(Arrays.toString(entries));
         Element huffmanTree = encode.createHoffmanTree(entries);
-        System.out.println("test key" + huffmanTree.getKey() + "    data " + ((Node) huffmanTree.getData()).getFrequency());
+        System.out.println("Element test key" + huffmanTree.getKey() + "    data " + ((Node) huffmanTree.getData()).toString());
         System.out.println("huffmanTable: " + Arrays.toString(encode.huffmanTable((Node)huffmanTree.getData())));
     }
 
@@ -86,14 +86,12 @@ public class Encode {
     private String[] huffmanWalk(Node node, String[] a, StringBuilder sb) {
         if (node != null) {
             huffmanWalk(node.getLeft(), a, sb.append("0"));
+            sb.deleteCharAt(sb.length()-1);
             
-            //denne if statement er måske forkert-------------------------------<<<<<<KIG HER
             if (node.getCharacter() != -1) {
                 a[node.getCharacter()] = sb.toString();
                 System.out.println("node: " + node.toString() +" sb: " + sb.toString());
-//                sb.deleteCharAt(sb.length()-1);
             }
-            //sb.deleteCharAt(sb.length()-1);
             
             huffmanWalk(node.getRight(), a, sb.append("1"));
             sb.deleteCharAt(sb.length()-1);
