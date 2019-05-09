@@ -35,9 +35,10 @@ public class Decode {
             Element theHuffmanTree = decode.createHoffmanTree(entries);
             Node theHuffmanTreeNode = (Node) theHuffmanTree.getData();
             Node tempNode = theHuffmanTreeNode;
-            for (int i = 0; i < combinedFrequencies; i++) { //Måske +1 <-------------------------KIG HER!!!!!
+            for (int i = 0; i < combinedFrequencies;) { //Måske +1 <-------------------------KIG HER!!!!!
                 int j = input.readBit();
                 if (tempNode.getCharacter() != -1) {
+                    i++;
                     output.write(tempNode.getCharacter());
                     tempNode = theHuffmanTreeNode; //<-------------------denne linje gør at filen ikke får samme størrelse igen
                 } else {
@@ -50,7 +51,8 @@ public class Decode {
                             break;
                         default:
                             System.out.println("readBit error");
-                            break;
+                            System.out.println("j = " + j);
+                            return;
                     }
                 }
             }
