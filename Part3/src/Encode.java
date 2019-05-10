@@ -4,7 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Arrays;
 
 /**
  * @author Robin Lausten Petersen - ropet17
@@ -29,8 +28,8 @@ public class Encode {
 
         try {
             input = new FileInputStream(new File(nameOfOriginalFile));
-            int i;
-            while ((i = input.read()) != -1) {
+            while (input.available() > 0) {
+                int i = input.read();
                 entries[i]++;
             }
         } catch (FileNotFoundException ex) {
@@ -49,27 +48,24 @@ public class Encode {
         }
         input = null;
 
-        System.out.println(Arrays.toString(entries));
         Element huffmanTree = encode.createHoffmanTree(entries);
-        huffmanPathTable = encode.huffmanTable((Node)huffmanTree.getData());
-        
+        huffmanPathTable = encode.huffmanTable((Node) huffmanTree.getData());
+
         try {
             bitOutputStream = new BitOutputStream(output = new FileOutputStream(nameOfCompressedFile));
             for (int i = 0; i < entries.length; i++) {
                 bitOutputStream.writeInt(entries[i]);
             }
-            
+
             input = new FileInputStream(new File(nameOfOriginalFile));
-            int i;
-            while ((i = input.read()) != -1) {
-                
+            while (input.available() > 0) {
+                int i = input.read();
                 for (int j = 0; j < huffmanPathTable[i].length(); j++) {
                     char c = huffmanPathTable[i].charAt(j);
                     int o = Integer.parseInt(String.valueOf(c));
-//                    System.out.println("o = " + o + " charAt = " + huffmanPathTable[i].charAt(j) + " c = " + c);
                     bitOutputStream.writeBit(o);
                 }
-                  
+
             }
         } catch (FileNotFoundException ex) {
             System.out.println("inputStream file exception");
@@ -86,7 +82,7 @@ public class Encode {
             }
 
         }
-        
+
     }
 
     public Element createHoffmanTree(int[] c) {
@@ -123,15 +119,14 @@ public class Encode {
     private String[] huffmanWalk(Node node, String[] a, StringBuilder sb) {
         if (node != null) {
             huffmanWalk(node.getLeft(), a, sb.append("0"));
-            sb.deleteCharAt(sb.length()-1);
-            
+            sb.deleteCharAt(sb.length() - 1);
+
             if (node.getCharacter() != -1) {
                 a[node.getCharacter()] = sb.toString();
-//                System.out.println("node: " + node.toString() +" sb: " + sb.toString());
             }
-            
+
             huffmanWalk(node.getRight(), a, sb.append("1"));
-            sb.deleteCharAt(sb.length()-1);
+            sb.deleteCharAt(sb.length() - 1);
         }
         return a;
     }

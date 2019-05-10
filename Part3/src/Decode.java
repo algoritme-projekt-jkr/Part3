@@ -4,8 +4,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * @author Robin Lausten Petersen - ropet17
@@ -31,16 +29,17 @@ public class Decode {
                 entries[i] = temp;
                 combinedFrequencies += temp;
             }
-            System.out.println(Arrays.toString(entries));
+            
             Element theHuffmanTree = decode.createHoffmanTree(entries);
             Node theHuffmanTreeNode = (Node) theHuffmanTree.getData();
             Node tempNode = theHuffmanTreeNode;
-            for (int i = 0; i < combinedFrequencies; i++) { //Måske +1 <-------------------------KIG HER!!!!!
-                int j = input.readBit();
+            for (int i = 0; i < combinedFrequencies;) {
                 if (tempNode.getCharacter() != -1) {
+                    i++;
                     output.write(tempNode.getCharacter());
-                    tempNode = theHuffmanTreeNode; //<-------------------denne linje gør at filen ikke får samme størrelse igen
+                    tempNode = theHuffmanTreeNode;
                 } else {
+                    int j = input.readBit();
                     switch (j) {
                         case 0:
                             tempNode = tempNode.getLeft();
@@ -50,7 +49,8 @@ public class Decode {
                             break;
                         default:
                             System.out.println("readBit error");
-                            break;
+                            System.out.println("j = " + j);
+                            return;
                     }
                 }
             }
