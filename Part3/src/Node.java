@@ -5,20 +5,22 @@
  * @author Kim Christensen - kichr17
  */
 public class Node {
-    private Node left;
-    private Node right;
-    private int frequency;
-    private int character;
-
+    private Node left; //left child
+    private Node right; // right child
+    private int frequency; //the frequency of this node
+    private int character; // the character of this node
+    
+    //a constructor where you only set the frequency
     public Node(int frequency) {
         this.left = null;
         this.right = null;
         this.frequency = frequency;
-        this.character = -1;
+        this.character = -1; //a node without a character has character -1
     }
-
+    
+    //a constructor to set the character and the frequency
     public Node(int character, int frequency) {
-        this(frequency);
+        this(frequency); //a call to the other constructor
         this.character = character;
     }
 
@@ -54,6 +56,7 @@ public class Node {
         this.character = character;
     }
     
+    @Override
     public String toString(){
         return "frequency: " + this.frequency + " character: " + this.character;
     }
