@@ -91,11 +91,14 @@ public class Decode {
         int n = c.length; //the length of c
         PQ q = new PQHeap(n); //we instantiate our queue/PQHeap with the length n
         for (int i = 0; i < c.length; i++) {
-            q.insert(new Element(c[i], new Node(i, c[i]))); //we insert elements with the frequency as key and a new node with the character and frequency
+            //we insert elements with the frequency as key
+            //and a new node with the character and frequency
+            q.insert(new Element(c[i], new Node(i, c[i]))); 
         }
         for (int i = 0; i <= n - 2; i++) {
             Node z = new Node(c[i]); //the new node of the hoffman tree
-            Node x = (Node) q.extractMin().getData(); //we create a node x by extractMin.getData(), from q
+            //we create a node x by extractMin.getData(), from q
+            Node x = (Node) q.extractMin().getData(); 
             z.setLeft(x); //we set the left node of z to be x
 
             //here we do the same thing with y as we did with x
@@ -104,8 +107,9 @@ public class Decode {
 
             //we set the frequency of z to be the sum of x and y'z frequency
             z.setFrequency(x.getFrequency() + y.getFrequency());
-
-            q.insert(new Element(z.getFrequency(), z)); // we insert z back into the q
+            
+            // we insert z back into the q
+            q.insert(new Element(z.getFrequency(), z)); 
         }
         return q.extractMin();//we return the root
     }
