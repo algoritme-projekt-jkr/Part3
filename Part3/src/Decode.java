@@ -82,15 +82,20 @@ public class Decode {
 
     }
     
+    /**
+     * this method creates the huffman tree
+     * @param c the frequency array
+     * @return the root element
+     */
     public Element createHoffmanTree(int[] c) {
-        int n = c.length;
-        PQ q = new PQHeap(n);
+        int n = c.length; //the length of c
+        PQ q = new PQHeap(n); //we instantiate our queue/PQHeap with the length n
         for (int i = 0; i < c.length; i++) {
-            q.insert(new Element(c[i], new Node(i, c[i])));
+            q.insert(new Element(c[i], new Node(i, c[i]))); //we insert elements with the frequency as key and a new node with the character and frequency
         }
         for (int i = 0; i <= n - 2; i++) {
             Node z = new Node(c[i]); //the new node of the hoffman tree
-            Node x = (Node) q.extractMin().getData(); //we create a node x by extractMin.getData(), from q, to get the frequency
+            Node x = (Node) q.extractMin().getData(); //we create a node x by extractMin.getData(), from q
             z.setLeft(x); //we set the left node of z to be x
 
             //here we do the same thing with y as we did with x
@@ -101,10 +106,8 @@ public class Decode {
             z.setFrequency(x.getFrequency() + y.getFrequency());
 
             q.insert(new Element(z.getFrequency(), z)); // we insert z back into the q
-
         }
-
-        return q.extractMin();
+        return q.extractMin();//we return the root
     }
 
 }
