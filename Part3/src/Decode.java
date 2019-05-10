@@ -13,48 +13,55 @@ import java.io.IOException;
 public class Decode {
 
     public static void main(String[] args) {
-        String nameOfCompressedFile = args[0];
-        String nameOfUncompressedFile = args[1];
-        Decode decode = new Decode();
-        BitInputStream input = null;
-        FileOutputStream output = null;
-        int entries[] = new int[256];
-        int combinedFrequencies = 0;
+        String nameOfCompressedFile = args[0]; //The file to decode
+        String nameOfUncompressedFile = args[1]; //The decoded file
+        Decode decode = new Decode(); //Instance of decode for calling private methods
+        BitInputStream input = null; //BitInputStream for later use
+        FileOutputStream output = null; //FileOutputStream for later use
+        int entries[] = new int[256]; //Int array for storing frequencies for each byte
+        int combinedFrequencies = 0; //All frequencies added together to control amount of data to read
 
         try {
+            //Instanciate a new BitInputStream based on the file to Decode
             input = new BitInputStream(new FileInputStream(new File(nameOfCompressedFile)));
+            //Instanciate a new FileOutputStream based on file to write decoded data to
             output = new FileOutputStream(nameOfUncompressedFile);
+            //Read all byte frenquencies from the encoded file and fills the entries array with these values.
             for (int i = 0; i < entries.length; i++) {
-                int temp = input.readInt();
-                entries[i] = temp;
-                combinedFrequencies += temp;
+                int temp = input.readInt(); //temp = byte frequency
+                entries[i] = temp; //set byte representation in the entries array to be the same as in the encoded file
+                combinedFrequencies += temp; //increment the combinedFrequencies by the amount added to the entries array.
             }
             
+            //Create an element containing the hoffmantree which is based on the loaded frequancy table.
             Element theHuffmanTree = decode.createHoffmanTree(entries);
+            //Creates a node which is the root of the HuffmanTree.
             Node theHuffmanTreeNode = (Node) theHuffmanTree.getData();
+            //Creates a temp node for traversing the tree.
             Node tempNode = theHuffmanTreeNode;
+            //a loop for reading all the characters.
             for (int i = 0; i < combinedFrequencies;) {
-                if (tempNode.getCharacter() != -1) {
-                    i++;
-                    output.write(tempNode.getCharacter());
-                    tempNode = theHuffmanTreeNode;
+                if (tempNode.getCharacter() != -1) { //checks if the current node is a leaf or not
+                    i++; //if so, incremeant counter i by 1
+                    output.write(tempNode.getCharacter()); //then write the character to the output file
+                    tempNode = theHuffmanTreeNode; //then tempNode returns to the root.
                 } else {
-                    int j = input.readBit();
+                    int j = input.readBit(); //if tempNode is not a leaf, read the next bit for traversing the tree
                     switch (j) {
-                        case 0:
-                            tempNode = tempNode.getLeft();
+                        case 0: //if the bit is 0 we go left in the tree
+                            tempNode = tempNode.getLeft(); //set tempNode to be it's left child
                             break;
-                        case 1:
-                            tempNode = tempNode.getRight();
+                        case 1: //if the bit is 1 we go right in the tree
+                            tempNode = tempNode.getRight(); //set tempNode to be it's right child
                             break;
-                        default:
+                        default: //in case something goes wrong, print an error
                             System.out.println("readBit error");
                             System.out.println("j = " + j);
                             return;
                     }
                 }
             }
-
+            //catches I/O exceptions and finally closes the streams
         } catch (FileNotFoundException ex) {
             System.out.println("inputStream file exception");
             ex.printStackTrace();
@@ -74,7 +81,7 @@ public class Decode {
         output = null;
 
     }
-
+    
     public Element createHoffmanTree(int[] c) {
         int n = c.length;
         PQ q = new PQHeap(n);
