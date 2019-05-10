@@ -102,7 +102,7 @@ public class Encode {
         }
         for (int i = 0; i <= n - 2; i++) {
             Node z = new Node(c[i]); //the new node of the hoffman tree
-            Node x = (Node) q.extractMin().getData(); //we create a node x by extractMin.getData(), from q, to get the frequency
+            Node x = (Node) q.extractMin().getData(); //we create a node x by extractMin.getData(), from q
             z.setLeft(x); //we set the left node of z to be x
 
             //here we do the same thing with y as we did with x
@@ -113,31 +113,45 @@ public class Encode {
             z.setFrequency(x.getFrequency() + y.getFrequency());
 
             q.insert(new Element(z.getFrequency(), z)); // we insert z back into the q
-
         }
-
-        return q.extractMin();
+        return q.extractMin();//we return the root
     }
-
+    
+    /**
+     * this method is responsible for calling the recursive tree walk of the huffman tree
+     * @param root the root node of the huffman tree
+     * @return an array of strings for the path to each character in the huffman tree
+     */
     public String[] huffmanTable(Node root) {
-        String huffmanCodes[] = new String[256];
-        StringBuilder sb = new StringBuilder();
-        return huffmanWalk(root, huffmanCodes, sb);
+        String huffmanCodes[] = new String[256]; //a string array with an index for each byte
+        StringBuilder sb = new StringBuilder(); //a stringBuilder for making the paths
+        return huffmanWalk(root, huffmanCodes, sb); //return the call to the recursive tree walk
     }
-
+    
+    /**
+     * a recursive method to find all the paths to the characters
+     * @param node the node to look at
+     * @param a the string array with the paths
+     * @param sb the stringBuilder
+     * @return the string array with the paths 
+     */
     private String[] huffmanWalk(Node node, String[] a, StringBuilder sb) {
-        if (node != null) {
-            huffmanWalk(node.getLeft(), a, sb.append("0"));
-            sb.deleteCharAt(sb.length() - 1);
+        if (node != null) { //if we are looking at a node
+            //recursive call on the left child where we append 0 to the path
+            huffmanWalk(node.getLeft(), a, sb.append("0")); 
+            sb.deleteCharAt(sb.length() - 1); //delete the last path bit
 
+            //if the node is a leaf with a character
             if (node.getCharacter() != -1) {
-                a[node.getCharacter()] = sb.toString();
+                //write the path at the character's index
+                a[node.getCharacter()] = sb.toString(); 
             }
-
+            
+            //recursive call on the right child where we append 1 to the path
             huffmanWalk(node.getRight(), a, sb.append("1"));
-            sb.deleteCharAt(sb.length() - 1);
+            sb.deleteCharAt(sb.length() - 1); //delete the last path bit
         }
-        return a;
+        return a; // return the path array
     }
 
 }
