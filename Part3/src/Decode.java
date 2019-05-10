@@ -39,6 +39,7 @@ public class Decode {
                 int j = input.readBit();
                 if (tempNode.getCharacter() != -1) {
                     i++;
+                    System.out.println("tempNode.getChar = " + tempNode.getCharacter());
                     output.write(tempNode.getCharacter());
                     tempNode = theHuffmanTreeNode; //<-------------------denne linje gør at filen ikke får samme størrelse igen
                 } else {

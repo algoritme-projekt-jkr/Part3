@@ -53,6 +53,7 @@ public class Encode {
         System.out.println(Arrays.toString(entries));
         Element huffmanTree = encode.createHoffmanTree(entries);
         huffmanPathTable = encode.huffmanTable((Node) huffmanTree.getData());
+        System.out.println(Arrays.toString(huffmanPathTable));
 
         try {
             bitOutputStream = new BitOutputStream(output = new FileOutputStream(nameOfCompressedFile));
