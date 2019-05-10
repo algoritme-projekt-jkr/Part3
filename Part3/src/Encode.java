@@ -28,7 +28,7 @@ public class Encode {
         //we have a try catch block because the different steams can throw exceptions
         try {
             input = new FileInputStream(new File(nameOfOriginalFile)); // now we instantiate the input stream with the input file
-            while (input.available() > 0) { //if there is anything left to read from the input
+            while (input.available() > 0) { //while there is anything left to read from the input
                 int i = input.read(); //we read a byte
                 entries[i]++; //we increment the value at the index that corresponts to the byte
             }
@@ -47,27 +47,30 @@ public class Encode {
             }
 
         }
-        input = null; // we set the input to null to be 100% sure that we don't use the file anymore. this could be omitted because we close the input.
+        input = null; // we set the input to null to be 100% sure that we don't use the file anymore. Also because we are going to need to load the file again later
 
         Element huffmanTree = encode.createHoffmanTree(entries); //we create the huffman tree using our PQHeap from part 1. createHoffmanTree returns the root element where we can get the root node.
         huffmanPathTable = encode.huffmanTable((Node) huffmanTree.getData()); //we create the huffman table. we get the root node by casting the getData() to a node.
 
         try {
-            bitOutputStream = new BitOutputStream(new FileOutputStream(nameOfCompressedFile));
+            bitOutputStream = new BitOutputStream(new FileOutputStream(nameOfCompressedFile)); //we instaniate the BitOutputStream that we received as part of the assignment
             for (int i = 0; i < entries.length; i++) {
-                bitOutputStream.writeInt(entries[i]);
+                bitOutputStream.writeInt(entries[i]); //we write each value from the frequency table as an int to the output file
             }
 
-            input = new FileInputStream(new File(nameOfOriginalFile));
-            while (input.available() > 0) {
-                int i = input.read();
+            input = new FileInputStream(new File(nameOfOriginalFile)); //we read the input file again
+            while (input.available() > 0) { // while there is anything left to read from the input 
+                int i = input.read(); //we read a byte
+                //we look in the huffmanPathTable at the index of the byte we just read
+                //for each char at that index, we write that char (either 1 or 0) to the output.
                 for (int j = 0; j < huffmanPathTable[i].length(); j++) {
                     char c = huffmanPathTable[i].charAt(j);
-                    int o = Integer.parseInt(String.valueOf(c));
-                    bitOutputStream.writeBit(o);
+                    int o = Integer.parseInt(String.valueOf(c)); //we parse the char as an int, by using the valueOf in String
+                    bitOutputStream.writeBit(o); //we write the bit to the output
                 }
 
             }
+            //we catch exceptions and in "finally" we close the streams
         } catch (FileNotFoundException ex) {
             System.out.println("inputStream file exception");
             ex.printStackTrace();
@@ -85,12 +88,17 @@ public class Encode {
         }
 
     }
-
+    
+    /**
+     * this method creates the huffman tree
+     * @param c the frequency array
+     * @return the root element
+     */
     public Element createHoffmanTree(int[] c) {
-        int n = c.length;
-        PQ q = new PQHeap(n);
+        int n = c.length; //the length of c
+        PQ q = new PQHeap(n); //we instantiate our queue/PQHeap with the length n
         for (int i = 0; i < c.length; i++) {
-            q.insert(new Element(c[i], new Node(i, c[i])));
+            q.insert(new Element(c[i], new Node(i, c[i]))); //we insert elements with the frequency as key and a new node with the character and frequency
         }
         for (int i = 0; i <= n - 2; i++) {
             Node z = new Node(c[i]); //the new node of the hoffman tree
