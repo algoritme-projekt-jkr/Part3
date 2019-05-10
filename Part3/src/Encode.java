@@ -13,32 +13,33 @@ import java.io.IOException;
 public class Encode {
 
     public static void main(String[] args) {
-        Encode encode = new Encode();
-        String nameOfOriginalFile = args[0];
-        String nameOfCompressedFile = args[1];
-        FileInputStream input = null;
-        FileOutputStream output = null;
-        String[] huffmanPathTable;
-        BitOutputStream bitOutputStream = null;
+        Encode encode = new Encode(); //instantiate the class as an object we can use
+        String nameOfOriginalFile = args[0]; //the name of the input file that we get from the commandline
+        String nameOfCompressedFile = args[1]; //the name of the output file that we get from the commandline
+        FileInputStream input = null; //we initialice the input steam as a null value because we need it later
+        String[] huffmanPathTable; // a string array that will hold the 0/1 paths through the tree to the leaf/node with a character
+        BitOutputStream bitOutputStream = null; // we instantiate to null because we need it later
 
-        int entries[] = new int[256];
+        int entries[] = new int[256]; // we make an array for the frequencies of each byte (from 0 to 255)
         for (int i = 0; i < entries.length; i++) {
-            entries[i] = 0;
+            entries[i] = 0; //we make sure that all indexes has the value 0
         }
-
+        
+        //we have a try catch block because the different steams can throw exceptions
         try {
-            input = new FileInputStream(new File(nameOfOriginalFile));
-            while (input.available() > 0) {
-                int i = input.read();
-                entries[i]++;
+            input = new FileInputStream(new File(nameOfOriginalFile)); // now we instantiate the input stream with the input file
+            while (input.available() > 0) { //if there is anything left to read from the input
+                int i = input.read(); //we read a byte
+                entries[i]++; //we increment the value at the index that corresponts to the byte
             }
+            //we catch different exceptions
         } catch (FileNotFoundException ex) {
             System.out.println("inputStream file exception");
             ex.printStackTrace();
         } catch (IOException ex) {
             System.out.println("IOException");
             ex.printStackTrace();
-        } finally {
+        } finally { //when it is done we close the input. finally is called automatically when the try is done.
             try {
                 input.close();
             } catch (IOException ex) {
@@ -46,13 +47,13 @@ public class Encode {
             }
 
         }
-        input = null;
+        input = null; // we set the input to null to be 100% sure that we don't use the file anymore. this could be omitted because we close the input.
 
-        Element huffmanTree = encode.createHoffmanTree(entries);
-        huffmanPathTable = encode.huffmanTable((Node) huffmanTree.getData());
+        Element huffmanTree = encode.createHoffmanTree(entries); //we create the huffman tree using our PQHeap from part 1. createHoffmanTree returns the root element where we can get the root node.
+        huffmanPathTable = encode.huffmanTable((Node) huffmanTree.getData()); //we create the huffman table. we get the root node by casting the getData() to a node.
 
         try {
-            bitOutputStream = new BitOutputStream(output = new FileOutputStream(nameOfCompressedFile));
+            bitOutputStream = new BitOutputStream(new FileOutputStream(nameOfCompressedFile));
             for (int i = 0; i < entries.length; i++) {
                 bitOutputStream.writeInt(entries[i]);
             }
