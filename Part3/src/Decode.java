@@ -13,27 +13,33 @@ import java.io.IOException;
 public class Decode {
 
     public static void main(String[] args) {
-        String nameOfCompressedFile = args[0]; //The file to decode
-        String nameOfUncompressedFile = args[1]; //The decoded file
-        Decode decode = new Decode(); //Instance of decode for calling private methods
+        String nameOfCompressedFile = args[0]; //The name of the file to decode
+        String nameOfUncompressedFile = args[1]; //The name of the decoded file
+        Decode decode = new Decode(); //Instance of decode for calling non-static methods
         BitInputStream input = null; //BitInputStream for later use
         FileOutputStream output = null; //FileOutputStream for later use
         int entries[] = new int[256]; //Int array for storing frequencies for each byte
-        int combinedFrequencies = 0; //All frequencies added together to control amount of data to read
+        //All frequencies added together to control amount of data to read
+        int combinedFrequencies = 0; 
 
         try {
             //Instanciate a new BitInputStream based on the file to Decode
             input = new BitInputStream(new FileInputStream(new File(nameOfCompressedFile)));
             //Instanciate a new FileOutputStream based on file to write decoded data to
             output = new FileOutputStream(nameOfUncompressedFile);
-            //Read all byte frenquencies from the encoded file and fills the entries array with these values.
+            //Read all byte frenquencies from the encoded file
+            //and fills the entries array with these values.
             for (int i = 0; i < entries.length; i++) {
                 int temp = input.readInt(); //temp = byte frequency
-                entries[i] = temp; //set byte representation in the entries array to be the same as in the encoded file
-                combinedFrequencies += temp; //increment the combinedFrequencies by the amount added to the entries array.
+                //set byte representation in the entries array to be
+                //the same as in the encoded file
+                entries[i] = temp; 
+                //increment the combinedFrequencies by the amount added to the entries array.
+                combinedFrequencies += temp; 
             }
             
-            //Create an element containing the hoffmantree which is based on the loaded frequancy table.
+            //Create an element containing the hoffmantree
+            //which is based on the loaded frequancy table.
             Element theHuffmanTree = decode.createHoffmanTree(entries);
             //Creates a node which is the root of the HuffmanTree.
             Node theHuffmanTreeNode = (Node) theHuffmanTree.getData();
@@ -41,23 +47,28 @@ public class Decode {
             Node tempNode = theHuffmanTreeNode;
             //a loop for reading all the characters.
             for (int i = 0; i < combinedFrequencies;) {
-                if (tempNode.getCharacter() != -1) { //checks if the current node is a leaf or not
+                //checks if the current node is a leaf or not
+                if (tempNode.getCharacter() != -1) { 
                     i++; //if so, incremeant counter i by 1
-                    output.write(tempNode.getCharacter()); //then write the character to the output file
+                    //then write the character to the output file
+                    output.write(tempNode.getCharacter()); 
                     tempNode = theHuffmanTreeNode; //then tempNode returns to the root.
                 } else {
-                    int j = input.readBit(); //if tempNode is not a leaf, read the next bit for traversing the tree
+                    //if tempNode is not a leaf, read the next bit for traversing the tree
+                    int j = input.readBit(); 
                     switch (j) {
                         case 0: //if the bit is 0 we go left in the tree
-                            tempNode = tempNode.getLeft(); //set tempNode to be it's left child
+                            //set tempNode to be it's left child
+                            tempNode = tempNode.getLeft(); 
                             break;
                         case 1: //if the bit is 1 we go right in the tree
-                            tempNode = tempNode.getRight(); //set tempNode to be it's right child
+                            //set tempNode to be it's right child
+                            tempNode = tempNode.getRight(); 
                             break;
                         default: //in case something goes wrong, print an error
                             System.out.println("readBit error");
                             System.out.println("j = " + j);
-                            return;
+                            return; //return (instead of break) will stop the loop
                     }
                 }
             }
@@ -77,6 +88,7 @@ public class Decode {
             }
 
         }
+        //we set the streams to be null, because we don't need them anymore
         input = null;
         output = null;
 
@@ -84,6 +96,9 @@ public class Decode {
     
     /**
      * this method creates the huffman tree
+     * 
+     * this method is exactly the same as in Encode to ensure that we make
+     * the same huffman tree again when we decode
      * @param c the frequency array
      * @return the root element
      */
